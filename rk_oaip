@@ -1,0 +1,68 @@
+#include <iostream>
+#include <string>
+#include<list>
+using namespace std;
+
+class Building {
+protected:
+	string title;
+	int floorcount;
+public:
+	Building(string t,int f) :title(t),floorcount(f) {}
+	virtual void display() const {
+		cout << "title of building: " << title<<endl;
+		cout << "count of floors: " << floorcount<<endl;
+	}
+};
+class ResidentalBuilding :public Building {
+protected:
+	int flatcount;
+public:
+	ResidentalBuilding(string title, int floor, int flat) :Building(title, floor), flatcount(flat) {}
+	void display() const override {
+		Building(title, floorcount).display();
+		cout << "count of flats: " << flatcount<<endl<<endl;
+	}
+};
+
+class OfficeBuilding:public Building {
+protected:
+	int officecount;
+public:
+	OfficeBuilding(string title, int floor, int office) :Building(title,floor),officecount(office) {}
+	void display() const override{
+		Building(title,floorcount).display();
+		cout << "count of offices: " << officecount<<endl<<endl;
+	}
+};
+void change(Building* B, string title, int floors, int flats_or_offices) {
+	if (dynamic_cast<ResidentalBuilding*>(B)) {
+		new (B) ResidentalBuilding(title, floors, flats_or_offices);
+	}
+	else {
+		new (B) OfficeBuilding(title, floors, flats_or_offices);
+	}
+}
+int main() {
+	Building* gazprom=new OfficeBuilding("gazprom", 100, 100);
+	Building* lukoil=new ResidentalBuilding("lukoil", 10, 1000);
+	Building* pyatorochka = new OfficeBuilding("pyatorochka", 10, 33);
+	Building* victoria = new OfficeBuilding("victoria", 21, 103);
+	Building* lada = new ResidentalBuilding("lada", 13, 3);
+	Building* china = new ResidentalBuilding("china",10000 ,10000000);
+	change(victoria, "perecryostok", 22, 104);
+	change(lada, "scrap_metal", 0, 0);
+	list <Building*> lst;
+	lst.push_back(lukoil);
+	lst.push_back(gazprom);
+	lst.push_back(pyatorochka);
+	lst.push_back(victoria);
+	lst.push_back(lada);
+	lst.push_back(china);
+	for (auto it : lst) {
+		it->display();
+	}
+	for (auto it : lst) {
+		delete it;
+	}
+}
