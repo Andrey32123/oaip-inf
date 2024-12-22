@@ -1,0 +1,278 @@
+#include <iostream>
+#include <string>
+#include<list>
+#include <fstream>
+using namespace std;
+
+class Light {
+private:
+	bool isOn;
+public:
+	void turnOn() {
+		isOn = true;
+	}
+
+	void turnOff() {
+		isOn = false;
+	}
+
+	string getStatus() {
+		if (isOn == true) {
+			return "ON";
+		}
+		else {
+			return "OFF";
+		}
+	}
+
+	bool getState() {
+		return isOn;
+	}
+
+	void setState(bool state) {
+		isOn = state;
+	}
+};
+
+class Thermostat {
+private:
+	int temperature;
+public:
+	void setTemperature(int t) {
+		temperature = t;
+	}
+
+	int getTemperature() {
+		return temperature;
+	}
+};
+
+class SecuritySystem {
+private:
+	bool isArmed;
+public:
+	void arm() {
+		isArmed = true;
+	}
+
+	void disarm() {
+		isArmed = false;
+	}
+
+	string getStatus() {
+		if (isArmed == true) {
+			return "Armed";
+		}
+		else {
+			return "Disarmed";
+		}
+	}
+
+	bool getState() {
+		return isArmed;
+	}
+
+	void setState(bool state) {
+		isArmed = state;
+	}
+};
+
+class Curtains {
+private:
+	bool isUp;
+public:
+	void raise() {
+		isUp = true;
+	}
+
+	void lower() {
+		isUp = false;
+	}
+
+	string getStatus() {
+		if (isUp == true) {
+			return "Raised";
+		}
+		else {
+			return "Lowered";
+		}
+	}
+
+	bool getState() {
+		return isUp;
+	}
+
+	void setState(bool state) {
+		isUp = state;
+	}
+};
+
+class AirConditioner {
+private:
+	bool isOn;
+public:
+	void turnOn() {
+		isOn = true;
+	}
+
+	void turnOff() {
+		isOn = false;
+	}
+
+	string getStatus() {
+		if (isOn == true) {
+			return "ON";
+		}
+		else {
+			return "OFF";
+		}
+	}
+
+	bool getState() {
+		return isOn;
+	}
+
+	void setState(bool state) {
+		isOn = state;
+	}
+};
+class SmartHome {
+private:
+	Light light;
+	Thermostat thermostat;
+	SecuritySystem securitySystem;
+	Curtains curtains;
+	AirConditioner airConditioner;
+	string stateFile = "homefile.txt";
+public:
+	void controlLight(bool state) {
+		light.setState(state);
+	}
+	void setTemperature(int temp) {
+		thermostat.setTemperature(temp);
+	}
+	void controlSecurity(bool state) {
+		securitySystem.setState(state);
+	}
+	void controlCurtains(bool state) {
+		curtains.setState(state);
+	}
+	void controlAirConditioner(bool state) {
+		airConditioner.setState(state);
+	}
+	void displayStatus() {
+		cout << "Current state:"<<endl;
+		cout << "Light: "+light.getStatus() << endl;
+		cout << "Temperature: "<<thermostat.getTemperature()<<"°C" << endl;
+		cout << "Security System: " << securitySystem.getStatus() << endl;
+		cout << "Curtains: " << curtains.getStatus() << endl;
+		cout << "Air Conditioner: " << airConditioner.getStatus() << endl;
+	}
+	void saveState() {
+		ofstream out;
+		out.open(stateFile);
+		out << light.getState()<<endl;
+		out << thermostat.getTemperature() << endl;
+		out << securitySystem.getState() << endl;
+		out << curtains.getState() << endl;
+		out << airConditioner.getState() << endl;
+		out.close();
+	}
+};
+struct DefaultHomeState {
+	bool lightOn = false;
+	int temp = 20;
+	bool secSystOn = false;
+	bool curtainsUp = false;
+	bool conditionerOn = false;
+};
+int main() {
+	SmartHome myHome;
+	DefaultHomeState homeState;
+	ifstream f("homefile.txt");
+	if (!f) {
+		cout << "No previous state file found. Using default settings. " << endl;
+		f.close();
+		myHome.controlLight(homeState.lightOn);
+		myHome.setTemperature(homeState.temp);
+		myHome.controlSecurity(homeState.secSystOn);
+		myHome.controlCurtains(homeState.curtainsUp);
+		myHome.controlAirConditioner(homeState.conditionerOn);
+	}else{
+		string s;
+		std::getline(f, s);
+		homeState.lightOn=stoi(s);
+		myHome.controlLight(homeState.lightOn);
+		std::getline(f, s);
+		homeState.temp = stoi(s);
+		myHome.setTemperature(homeState.temp);
+		std::getline(f,s);
+		homeState.secSystOn = stoi(s);
+		myHome.controlSecurity(homeState.secSystOn);
+		std::getline(f, s);
+		homeState.curtainsUp = stoi(s);
+		myHome.controlCurtains(homeState.curtainsUp);
+		std::getline(f, s);
+		homeState.conditionerOn = stoi(s);
+		myHome.controlAirConditioner(homeState.conditionerOn);
+		f.close();
+	}
+	myHome.displayStatus();
+	cout << endl << "Choose an action:" << endl << endl;
+	cout << "1. Turn on light "<<endl;
+	cout << "2. Turn off light " << endl;
+	cout << "3. Set temperature" << endl;
+	cout << "4. Arm security system" << endl;
+	cout << "5. Disarm security system" << endl;
+	cout << "6. Raise curtains" << endl;
+	cout << "7. Lower curtains " << endl;
+	cout << "8. Turn on air conditioner " << endl;
+	cout << "9. Turn off air conditioner " << endl;
+	cout << "10. Exit"<<endl;
+	int action=0;
+	while (action != 10) {
+		cin >> action;
+		switch (action) {
+		case 1:
+			myHome.controlLight(1);
+			break;
+		case 2:
+			myHome.controlLight(0);
+			break;
+		case 3: 
+			int temp;
+			cout << "set temperature: ";
+			cin >> temp;
+			myHome.setTemperature(temp);
+			break;
+		
+		case 4:
+			myHome.controlSecurity(1);
+			break;
+		case 5:
+			myHome.controlSecurity(0);
+			break;
+		case 6:
+			myHome.controlCurtains(1);
+			break;
+		case 7:
+			myHome.controlCurtains(0);
+			break;
+		case 8:
+			myHome.controlAirConditioner(1);
+			break;
+		case 9:
+			myHome.controlAirConditioner(0);
+			break;
+		case 10: 
+			myHome.displayStatus();
+			myHome.saveState();
+			break;
+		
+		default:
+			cout << "wrong action, try again" << endl;
+			break;
+		}
+	}
+	return 0;
+}
