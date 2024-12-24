@@ -1,0 +1,33 @@
+8
+Apple
+2
+Dessert
+3
+Pen
+4
+Dessert
+5
+Vegetables
+5
+Appetizer
+Cold
+PineApple
+5
+Dessert
+5
+ApplePen
+6
+Dessert
+8
+Croutons
+8
+Appetizer
+Hot
+Borsch
+12
+MainCourse
+Soap
+Pasta carbonara
+14
+MainCourse
+Hot dish
